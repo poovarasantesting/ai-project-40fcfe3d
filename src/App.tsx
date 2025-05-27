@@ -1,27 +1,30 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+
 import { Toaster } from "@/components/ui/toaster";
-import Dashboard from "@/pages/Dashboard";
+import { Toaster as Sonner } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Index from "./pages/Index";
+import TaskPage from "./pages/TaskPage";
+import NotFound from "./pages/NotFound";
 
-function App() {
-  // For this example, we're assuming the user is logged in
-  const isLoggedIn = true;
+const queryClient = new QueryClient();
 
-  return (
-    <BrowserRouter>
-      <Routes>
-        {isLoggedIn ? (
-          <>
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="*" element={<Navigate to="/dashboard" replace />} />
-          </>
-        ) : (
-          // Redirect to login if not logged in (you can replace this with your actual login route)
-          <Route path="*" element={<Navigate to="/login" replace />} />
-        )}
-      </Routes>
+const App = () => (
+  <QueryClientProvider client={queryClient}>
+    <TooltipProvider>
       <Toaster />
-    </BrowserRouter>
-  );
-}
+      <Sonner />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Index />} />
+          <Route path="/tasks" element={<TaskPage />} />
+          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </BrowserRouter>
+    </TooltipProvider>
+  </QueryClientProvider>
+);
 
 export default App;
